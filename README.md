@@ -1,11 +1,11 @@
 # [Library Management]
 ## Size of team: 4 members
-| Name  | Contract |
+| Name  | Contact |
 | ------------- | ------------- |
 | Truong Thi Tuong Vy  | [VyTrg](https://github.com/VyTrg)  |
-| Ho Thuan Kieu  | Contract  |
-| Nguyen Tan Quy  | Contract  |
-| Luong Tan Vinh  | Contract  |
+| Ho Thuan Kieu  | Contact  |
+| Nguyen Tan Quy  | Contact  |
+| Luong Tan Vinh  | Contact  |
 
 
 ## Library
