@@ -3,8 +3,8 @@
 | Name  | Contact |
 | ------------- | ------------- |
 | Truong Thi Tuong Vy  | [VyTrg](https://github.com/VyTrg)  |
-| Ho Thuan Kieu  | Contact  |
-| Nguyen Tan Quy  | Contact  |
+| Ho Thuan Kieu  | [UEIK](https://github.com/UEIK)  |
+| Nguyen Tan Quy  | [QuyCoding](https://github.com/tanquy04)  |
 | Luong Tan Vinh  | Contact  |
 
 
