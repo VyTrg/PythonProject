@@ -1,7 +1,9 @@
+
+
+
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from unicodedata import category
 
 Base = declarative_base()
 
@@ -9,8 +11,16 @@ class Login(Base):
     __tablename__ = 'login'
     username = Column(String, primary_key=True)
     password = Column(String, nullable=False)
-    status = Column(Boolean, default=True)
+    status = Column(Boolean, default=True) # operating:True or closed:False
     phone = Column(String)
+
+    def __init__(self, username, password, status, phone):
+        self.username = username
+        self.password = password
+        self.status = status
+        self.phone = phone
+
+
     
 class Category(Base): 
     __tablename__ = 'category'
@@ -130,10 +140,16 @@ Book.issue_details = relationship("IssueReturnDetail", back_populates="book")
 
 
 if __name__ == '__main__' :
-    engine = create_engine('sqlite:///library_management.db', echo=True)
+    engine = create_engine('sqlite:///library_management.db')
     Base.metadata.create_all(engine)
+
     
     Session = sessionmaker(bind=engine)
     session = Session()
 
-
+    # login1 = Login('librarian1','1',True,'0900000')
+    # login2 = Login('reader1','1',True,'0900001')
+    # session.add(login1)
+    # session.add(login2)
+    #
+    # session.commit()
