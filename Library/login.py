@@ -28,7 +28,7 @@ class WelcomeWindow:
 
 
         try:
-            self.dog_image = PhotoImage(file='C:\\thuvienimage.png')
+            self.dog_image = PhotoImage(file='assets/image/thuvienimage.png')
             self.dog_image_label = tk.Label(left_frame, image=self.dog_image, bg="#00FFFF")
             self.dog_image_label.pack(expand=True, fill=tk.BOTH)
         except tk.TclError as e:
