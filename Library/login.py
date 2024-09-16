@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 from library_management import Login
 
+import reader
 
 
 class WelcomeWindow:
@@ -77,9 +78,11 @@ class WelcomeWindow:
         username = session.query(Login).filter(self.user_entry.get()== Login.username).first()
         password = session.query(Login).filter(self.password_entry.get() == Login.password).first()
         if  username is not None and  password is not None:
-            if "reader" in username.username:
+            if "reader" in username.username: # reader role
                 messagebox.showinfo("Login Successful", "You have successfully logged in, Reader!")
-            elif "librarian" in username.username:
+                self.window.destroy()
+                reader.page()
+            elif "librarian" in username.username: #librarian role
                 messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
         else:
             messagebox.showinfo("Login Failed", "Please try again!")
