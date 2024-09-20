@@ -1,2 +1,4 @@
 Library/__pycache__/library_management.cpython-311.pyc
 Library/__pycache__/login.cpython-311.pyc
+.idea/.gitignore
+.idea/dataSources.xml

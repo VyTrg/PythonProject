@@ -3,9 +3,12 @@ from tkinter import messagebox
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+
 from library_management import Login
 
 import reader
+
+import librarian
 
 class LoginWindow:
     def __init__(self, window):
@@ -48,6 +51,8 @@ class LoginWindow:
                 reader.page()
             elif "librarian" in username.username: #librarian role
                 messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
+                self.window.destroy()
+                librarian.page()
         else:
             messagebox.showinfo("Login Failed", "Please try again!")
 
