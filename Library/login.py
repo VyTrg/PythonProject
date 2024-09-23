@@ -40,7 +40,7 @@ class WelcomeWindow:
                                bg="#36454F", fg="#FFFFFF")
         title_label.grid(row=0, column=0, columnspan=2, pady=(20, 10), padx=30, sticky='ne')
 
-        user_label = tk.Label(right_frame, text="User Name  :", padx=10, font=('Comic Sans MS', 15, 'bold'),
+        user_label = tk.Label(right_frame, text="Username  :", padx=10, font=('Comic Sans MS', 15, 'bold'),
                               bg="#36454F", fg="#FFFFFF")
         user_label.grid(row=0, column=0, columnspan=2, pady=(100, 10), padx=20, sticky='w')
 
@@ -51,7 +51,7 @@ class WelcomeWindow:
                               bg="#36454F", fg="#FFFFFF")
         password_label.grid(row=0, column=0, columnspan=2, pady=(200, 10), padx=0, sticky='w')
 
-        self.password_entry = tk.Entry(right_frame)
+        self.password_entry = tk.Entry(right_frame, show="*")
         self.password_entry.grid(row=0, column=1, columnspan=2, pady=(210, 10), padx=90, sticky='ne')
 
         login_button = tk.Button(right_frame, text="👉 Log In", font=('Arial', 20, 'bold'), command=self.login,
@@ -81,18 +81,21 @@ class WelcomeWindow:
             if "reader" in username.username: # reader role
                 messagebox.showinfo("Login Successful", "You have successfully logged in, Reader!")
                 self.window.destroy()
-                reader.page()
+                reader.run(username)
             elif "librarian" in username.username: #librarian role
                 messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
         else:
             messagebox.showinfo("Login Failed", "Please try again!")
 
 
-def page():
+def run():
     window = tk.Tk()
     WelcomeWindow(window)
     window.mainloop()
 
 
 if __name__ == '__main__':
-    page()
+    # page()
+    window = tk.Tk()
+    WelcomeWindow(window)
+    window.mainloop()
