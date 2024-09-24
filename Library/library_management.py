@@ -139,13 +139,13 @@ IssueReturn.details = relationship("IssueReturnDetail", back_populates="issue_re
 Book.issue_details = relationship("IssueReturnDetail", back_populates="book")
 
 
-if __name__ == '__main__' :
-    engine = create_engine('sqlite:///library_management.db')
-    Base.metadata.create_all(engine)
+# if __name__ == '__main__' :
+engine = create_engine('sqlite:///library_management.db')
+Base.metadata.create_all(engine)
 
     
-    Session = sessionmaker(bind=engine)
-    session = Session()
+Session = sessionmaker(bind=engine)
+session = Session()
 
     # login1 = Login('librarian1','1',True,'0900000')
     # login2 = Login('reader1','1',True,'0900001')
