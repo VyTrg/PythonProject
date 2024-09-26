@@ -103,14 +103,14 @@ class BookRequest(Base):
 Book.requests = relationship("BookRequest", back_populates="book")
 Login.requests = relationship("BookRequest", back_populates="user")
 
-class IssueReturn(Base):
-    __tablename__ = 'issue_return'
-    issue_return_id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, nullable=False)
-
-    def __init__(self, username, issue_return_id):
-        self.username = username
-        self.issue_return_id = issue_return_id
+# class IssueReturn(Base):
+#     __tablename__ = 'issue_return'
+#     issue_return_id = Column(Integer, primary_key=True, autoincrement=True)
+#     username = Column(String, nullable=False)
+#
+#     def __init__(self, username, issue_return_id):
+#         self.username = username
+#         self.issue_return_id = issue_return_id
 
 
 
@@ -122,7 +122,7 @@ class IssueReturnDetail(Base):
     date_issue = Column(Date)
     date_return = Column(Date, nullable=True)
     status = Column(String, default='Issued')
-
+    username = Column(String)
     issue_return = relationship("IssueReturn", back_populates="details")
     book = relationship("Book", back_populates="issue_details")
 

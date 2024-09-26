@@ -8,6 +8,7 @@ class ReaderWindow:
         self.window = window
         self.window.title("Reader")
         self.window.geometry("1000x600")
+        self.window.resizable(False, False)
 
         self.user = user
 
@@ -26,12 +27,18 @@ class ReaderWindow:
 
         # account button
         self.iconaccount = tk.PhotoImage(file="assets/icons/user.png", height=50, width=50)
-        self.buttonaccount = tk.Button(topFrame, text="Account", image=self.iconaccount, compound=tk.LEFT, font="arial 12 bold", command=self.account)
+        self.buttonaccount = tk.Button(topFrame, text="Account", image=self.iconaccount, compound=tk.LEFT, font="arial 12", command=self.account)
         self.buttonaccount.pack(side=tk.LEFT, padx=10)
 
         #welcome user
-        welcome_label = tk.Label(centerFrame, text="Welcome, " + str(self.user.username) , font="arial 12 bold", bg="#e0f0f0")
+        welcome_label = tk.Label(centerFrame, text="Welcome, " + str(self.user.username) , font="arial 12", bg="#e0f0f0")
         welcome_label.place(x=10, y=10)
+
+        #search book
+        self.iconsearchbook = tk.PhotoImage(file="assets/icons/magnifying-glass.png", height=50, width=50)
+        self.buttonsearchbook = tk.Button(topFrame, text="Search book", image=self.iconsearchbook, compound=tk.LEFT,
+                                       font="arial 12")
+        self.buttonsearchbook.pack(side=tk.LEFT, padx=10)
 
     def logout(self):
         self.window.destroy()

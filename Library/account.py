@@ -15,7 +15,6 @@ class AccountSetting(tk.Toplevel):
         self.title("Account Setting")
         self.geometry("650x300")
         self.resizable(False, False)
-
         self.user = user
 
         #top frame
@@ -79,9 +78,8 @@ class AccountSetting(tk.Toplevel):
             user.phone = self.phoneEntry.get()
             self.phoneEntry.delete(0, tk.END)
             self.phoneEntry.insert(0, user.phone)
-
             session.commit()
-            # self.user = session.query(Login).filter(Login.username == user.username).first()
+            self.user = user
 
 
     def change_pwd(self):
