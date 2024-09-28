@@ -103,14 +103,14 @@ class BookRequest(Base):
 Book.requests = relationship("BookRequest", back_populates="book")
 Login.requests = relationship("BookRequest", back_populates="user")
 
-class IssueReturn(Base):
-    __tablename__ = 'issue_return'
-    issue_return_id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, nullable=False)
-
-    def __init__(self, username, issue_return_id):
-        self.username = username
-        self.issue_return_id = issue_return_id
+# class IssueReturn(Base):
+#     __tablename__ = 'issue_return'
+#     issue_return_id = Column(Integer, primary_key=True, autoincrement=True)
+#     username = Column(String, nullable=False)
+#
+#     def __init__(self, username, issue_return_id):
+#         self.username = username
+#         self.issue_return_id = issue_return_id
 
 
 
@@ -122,7 +122,7 @@ class IssueReturnDetail(Base):
     date_issue = Column(Date)
     date_return = Column(Date, nullable=True)
     status = Column(String, default='Issued')
-
+    username = Column(String)
     issue_return = relationship("IssueReturn", back_populates="details")
     book = relationship("Book", back_populates="issue_details")
 
@@ -139,13 +139,13 @@ IssueReturn.details = relationship("IssueReturnDetail", back_populates="issue_re
 Book.issue_details = relationship("IssueReturnDetail", back_populates="book")
 
 
-if __name__ == '__main__' :
-    engine = create_engine('sqlite:///library_management.db')
-    Base.metadata.create_all(engine)
+# if __name__ == '__main__' :
+engine = create_engine('sqlite:///library_management.db')
+Base.metadata.create_all(engine)
 
     
-    Session = sessionmaker(bind=engine)
-    session = Session()
+Session = sessionmaker(bind=engine)
+session = Session()
 
     # login1 = Login('librarian1','1',True,'0900000')
     # login2 = Login('reader1','1',True,'0900001')
