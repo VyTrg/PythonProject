@@ -1,13 +1,16 @@
 import tkinter as tk
-from tkinter import messagebox, Label
+import account
 
 import login
 
 class ReaderWindow:
-    def __init__(self, window):
+    def __init__(self, window, user):
         self.window = window
         self.window.title("Reader")
         self.window.geometry("1000x600")
+        self.window.resizable(False, False)
+
+        self.user = user
 
         mainFrame = tk.Frame(self.window)
         mainFrame.pack()
@@ -22,15 +25,32 @@ class ReaderWindow:
         self.buttonlogout = tk.Button(topFrame, text="Logout", compound=tk.RIGHT, font='arial 12 bold', command=self.logout)
         self.buttonlogout.pack(side=tk.RIGHT, padx=10)
 
+        # account button
+        self.iconaccount = tk.PhotoImage(file="assets/icons/user.png", height=50, width=50)
+        self.buttonaccount = tk.Button(topFrame, text="Account", image=self.iconaccount, compound=tk.LEFT, font="arial 12", command=self.account)
+        self.buttonaccount.pack(side=tk.LEFT, padx=10)
+
+        #welcome user
+        welcome_label = tk.Label(centerFrame, text="Welcome, " + str(self.user.username) , font="arial 12", bg="#e0f0f0")
+        welcome_label.place(x=10, y=10)
+
+        #search book
+        self.iconsearchbook = tk.PhotoImage(file="assets/icons/magnifying-glass.png", height=50, width=50)
+        self.buttonsearchbook = tk.Button(topFrame, text="Search book", image=self.iconsearchbook, compound=tk.LEFT,
+                                       font="arial 12")
+        self.buttonsearchbook.pack(side=tk.LEFT, padx=10)
+
     def logout(self):
         self.window.destroy()
         login.page()
 
+    def account(self):
+        self.account = account.AccountSetting(self.user)
 
-def page():
+
+def run(user):
     window = tk.Tk()
-    ReaderWindow(window)
+    ReaderWindow(window, user)
     window.mainloop()
 
-if __name__ == '__main__':
-    page()
+# if __name__ == '__main__':

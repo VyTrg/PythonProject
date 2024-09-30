@@ -1,7 +1,6 @@
-
-
-
+from datetime import date
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Boolean
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
@@ -85,71 +84,41 @@ class BookCategory(Base):
 Book.categories = relationship("BookCategory", back_populates="book")
 Category.books = relationship("BookCategory", back_populates="category")
 
-class BookRequest(Base):
-    __tablename__ = 'book_request'
-    book_request_id = Column(Integer, primary_key=True, autoincrement=True)
-    book_id = Column(Integer, ForeignKey('book.book_id'))
-    username = Column(String, ForeignKey('login.username'))
-    issue_return = Column(Boolean, default=False)
-    
-    book = relationship("Book", back_populates="requests")
-    user = relationship("Login", back_populates="requests")
-
-    def __init__(self, book_id, username, issue_return):
-        self.book_id = book_id
-        self.username = username
-        self.issue_return = issue_return
-    
-Book.requests = relationship("BookRequest", back_populates="book")
-Login.requests = relationship("BookRequest", back_populates="user")
-
-class IssueReturn(Base):
-    __tablename__ = 'issue_return'
-    issue_return_id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, nullable=False)
-
-    def __init__(self, username, issue_return_id):
-        self.username = username
-        self.issue_return_id = issue_return_id
-
-
-
 class IssueReturnDetail(Base):
     __tablename__ = 'issue_return_detail'
     issue_return_detail_id = Column(Integer, primary_key=True, autoincrement=True)
-    issue_return_id = Column(Integer, ForeignKey('issue_return.issue_return_id'))
     book_id = Column(Integer, ForeignKey('book.book_id'))
     date_issue = Column(Date)
     date_return = Column(Date, nullable=True)
     status = Column(String, default='Issued')
+    username = Column(String)
 
-    issue_return = relationship("IssueReturn", back_populates="details")
-    book = relationship("Book", back_populates="issue_details")
-
-    def __init__(self, book_id, date_issue, date_return, status, issue_return, book):
+    def __init__(self, issue_return_detail_id, book_id, date_issue, date_return, status, username):
+        self.issue_return_detail_id = issue_return_detail_id
         self.book_id = book_id
         self.date_issue = date_issue
         self.date_return = date_return
         self.status = status
-        self.issue_return = issue_return
-        self.book = book
+        self.username = username
 
 
-IssueReturn.details = relationship("IssueReturnDetail", back_populates="issue_return")
-Book.issue_details = relationship("IssueReturnDetail", back_populates="book")
 
+# if __name__ == '__main__' :
+# engine = create_engine('sqlite:///library_management.db')
+# Base.metadata.create_all(engine)
+#
+# #
+# Session = sessionmaker(bind=engine)
+# session = Session()
 
-if __name__ == '__main__' :
-    engine = create_engine('sqlite:///library_management.db')
-    Base.metadata.create_all(engine)
+# book = Book(book_id=1,isbn='11111', title='Atomic habit', year=2018, quantity=20, image='assets/book_image/1.png')
+# session.add(book)
 
-    
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    # login1 = Login('librarian1','1',True,'0900000')
-    # login2 = Login('reader1','1',True,'0900001')
-    # session.add(login1)
-    # session.add(login2)
-    #
-    # session.commit()
+# issue_return_detail = IssueReturnDetail(issue_return_detail_id=1, book_id=1, date_issue=date(2024,9,29), date_return=None, status='Issued', username='reader1')
+# session.add(issue_return_detail)
+# session.commit()
+# conn = sqlite3.connect('library_management.db')issue_return_detail_id
+# c = conn.cursor()
+# c.execute("DROP TABLE IF EXISTS book_request")
+# c.execute("DROP TABLE IF EXISTS issue_return")
+# conn.commit()
