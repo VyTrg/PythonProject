@@ -104,12 +104,12 @@ class IssueReturnDetail(Base):
 
 
 # if __name__ == '__main__' :
-# engine = create_engine('sqlite:///library_management.db')
-# Base.metadata.create_all(engine)
-#
-# #
-# Session = sessionmaker(bind=engine)
-# session = Session()
+engine = create_engine('sqlite:///library_management.db')
+Base.metadata.create_all(engine)
+
+
+Session = sessionmaker(bind=engine)
+session = Session()
 
 # book = Book(book_id=1,isbn='11111', title='Atomic habit', year=2018, quantity=20, image='assets/book_image/1.png')
 # session.add(book)

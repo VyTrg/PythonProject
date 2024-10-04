@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import PhotoImage
 from tkinter import messagebox
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+
+from library_management import session
 
 from library_management import Login
 
@@ -70,22 +70,25 @@ class WelcomeWindow:
 
 
     def login(self):
-        engine = create_engine('sqlite:///library_management.db')
 
-        Session = sessionmaker(bind=engine)
-        session = Session()
+        # Session = sessionmaker(bind=engine)
+        # session = Session()
+        username = session.query(Login).filter(self.user_entry.get() == Login.username).first()
 
-        username = session.query(Login).filter(self.user_entry.get()== Login.username).first()
-        password = session.query(Login).filter(self.password_entry.get() == Login.password).first()
-        if  username is not None and  password is not None:
-            if "reader" in username.username: # reader role
-                messagebox.showinfo("Login Successful", "You have successfully logged in, Reader!")
-                self.window.destroy()
-                reader.run(username)
-            elif "librarian" in username.username: #librarian role
-                messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
-        else:
-            messagebox.showinfo("Login Failed", "Please try again!")
+        try:
+
+            if username is not None and username.password == self.password_entry.get():
+                if "reader" in username.username:  # reader role
+                    messagebox.showinfo("Login Successful", "You have successfully logged in, Reader!")
+                    self.window.destroy()
+                    reader.run(username)
+                if "librarian" in username.username:  # librarian role
+                    messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
+            else:
+                messagebox.showinfo("Login Failed", "Username or Password is incorrect!")
+        except ValueError as ve:
+            messagebox.showinfo("Login Failed", str(ve))
+
 
 
 def run():
@@ -95,7 +98,6 @@ def run():
 
 
 if __name__ == '__main__':
-    # page()
     window = tk.Tk()
     WelcomeWindow(window)
     window.mainloop()

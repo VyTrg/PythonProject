@@ -1,5 +1,6 @@
 import tkinter as tk
 import account
+from library_management import session, IssueReturnDetail
 
 import login
 
@@ -11,7 +12,9 @@ class ReaderWindow:
         self.window.resizable(False, False)
 
         self.user = user
-
+        book_lists = session.query(IssueReturnDetail).filter(IssueReturnDetail.username == self.user.username).all()
+        for book in book_lists:
+            print(book.book_id)
         mainFrame = tk.Frame(self.window)
         mainFrame.pack()
 
@@ -20,6 +23,8 @@ class ReaderWindow:
 
         centerFrame = tk.Frame(mainFrame, width=1000, relief=tk.RIDGE, bg="#e0f0f0", height=530)
         centerFrame.pack(side=tk.TOP)
+        leftFrame = tk.Frame()
+
 
         # self.iconlogout = tk.PhotoImage(file="assets/icons/logout.png")
         self.buttonlogout = tk.Button(topFrame, text="Logout", compound=tk.RIGHT, font='arial 12 bold', command=self.logout)
@@ -42,7 +47,7 @@ class ReaderWindow:
 
     def logout(self):
         self.window.destroy()
-        login.page()
+        login.run()
 
     def account(self):
         self.account = account.AccountSetting(self.user)
