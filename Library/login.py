@@ -4,9 +4,11 @@ from tkinter import messagebox
 
 from library_management import session
 
+
 from library_management import Login
 
 import reader
+import librarian
 
 
 class WelcomeWindow:
@@ -71,8 +73,6 @@ class WelcomeWindow:
 
     def login(self):
 
-        # Session = sessionmaker(bind=engine)
-        # session = Session()
         username = session.query(Login).filter(self.user_entry.get() == Login.username).first()
 
         try:
@@ -84,11 +84,14 @@ class WelcomeWindow:
                     reader.run(username)
                 if "librarian" in username.username:  # librarian role
                     messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
+                    self.window.destroy()
+                    librarian.run()
             else:
                 messagebox.showinfo("Login Failed", "Username or Password is incorrect!")
         except ValueError as ve:
             messagebox.showinfo("Login Failed", str(ve))
 
+    
 
 
 def run():
