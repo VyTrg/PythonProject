@@ -93,6 +93,7 @@ class WelcomeWindow:
 
 def run():
     window = tk.Tk()
+    # window.eval('tk::PlaceWindow . top')
     WelcomeWindow(window)
     window.mainloop()
 
