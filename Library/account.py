@@ -2,7 +2,6 @@ import tkinter as tk
 
 from tkinter import messagebox as mb
 
-from sqlalchemy import update
 from sqlalchemy.orm import Session, sessionmaker
 
 from library_management import Login, engine

@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from library_management import Login
 
 import reader
+import librarian
 
 
 class WelcomeWindow:
@@ -86,7 +87,7 @@ class WelcomeWindow:
             elif "librarian" in username.username: #librarian role
                 messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
                 self.window.destroy()
-                librarian.page()
+                librarian.run()
         else:
             messagebox.showinfo("Login Failed", "Please try again!")
 

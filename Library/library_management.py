@@ -84,6 +84,21 @@ class BookCategory(Base):
 Book.categories = relationship("BookCategory", back_populates="book")
 Category.books = relationship("BookCategory", back_populates="category")
 
+
+class BookRequest(Base):
+    __tablename__ = 'book_request'
+    book_request_id = Column(Integer, primary_key=True, autoincrement=True)
+    book_id = Column(Integer, ForeignKey('book.book_id'))
+    username = Column(String, ForeignKey('login.username'))
+    issue_return = Column(Boolean, default=False)
+
+    book = relationship("Book", back_populates="requests")
+    user = relationship("Login", back_populates="requests")
+
+
+Book.requests = relationship("BookRequest", back_populates="book")
+Login.requests = relationship("BookRequest", back_populates="user")
+
 class IssueReturnDetail(Base):
     __tablename__ = 'issue_return_detail'
     issue_return_detail_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -104,16 +119,16 @@ class IssueReturnDetail(Base):
 
 
 # if __name__ == '__main__' :
-# engine = create_engine('sqlite:///library_management.db')
-# Base.metadata.create_all(engine)
-#
+engine = create_engine('sqlite:///library_management.db')
+Base.metadata.create_all(engine)
+
 # #
 # Session = sessionmaker(bind=engine)
 # session = Session()
-
+#
 # book = Book(book_id=1,isbn='11111', title='Atomic habit', year=2018, quantity=20, image='assets/book_image/1.png')
 # session.add(book)
-
+#
 # issue_return_detail = IssueReturnDetail(issue_return_detail_id=1, book_id=1, date_issue=date(2024,9,29), date_return=None, status='Issued', username='reader1')
 # session.add(issue_return_detail)
 # session.commit()

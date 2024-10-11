@@ -42,7 +42,7 @@ class ReaderWindow:
 
     def logout(self):
         self.window.destroy()
-        login.page()
+        login.run()
 
     def account(self):
         self.account = account.AccountSetting(self.user)
