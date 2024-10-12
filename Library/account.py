@@ -2,9 +2,7 @@ import tkinter as tk
 
 from tkinter import messagebox as mb
 
-from sqlalchemy.orm import Session, sessionmaker
-
-from library_management import Login, engine
+from library_management import Login, session
 
 
 
@@ -70,8 +68,7 @@ class AccountSetting(tk.Toplevel):
     def change_phone(self):
         res = mb.askquestion('Change number phone', 'Do you want to change your phone number?')
         if res == 'yes':
-            Session = sessionmaker(bind=engine)
-            session = Session()
+
             user = session.query(Login).filter(Login.username == self.user.username).first()
 
             user.phone = self.phoneEntry.get()
@@ -84,8 +81,7 @@ class AccountSetting(tk.Toplevel):
     def change_pwd(self):
         res = mb.askquestion('Change number password', 'Do you want to change your password?')
         if res == 'yes':
-            Session = sessionmaker(bind=engine)
-            session = Session()
+
             user = session.query(Login).filter(Login.username == self.user.username).first()
 
             user.password = self.passwordEntry.get()

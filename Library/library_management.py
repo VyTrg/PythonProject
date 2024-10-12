@@ -113,6 +113,18 @@ class IssueReturnDetail(Base):
 # if __name__ == '__main__' :
 engine = create_engine('sqlite:///library_management.db')
 Base.metadata.create_all(engine)
-#
+
 Session = sessionmaker(bind=engine)
 session = Session()
+
+# book = Book(book_id=1,isbn='11111', title='Atomic habit', year=2018, quantity=20, image='assets/book_image/1.png')
+# session.add(book)
+
+# issue_return_detail = IssueReturnDetail(issue_return_detail_id=1, book_id=1, date_issue=date(2024,9,29), date_return=None, status='Issued', username='reader1')
+# session.add(issue_return_detail)
+# session.commit()
+# conn = sqlite3.connect('library_management.db')issue_return_detail_id
+# c = conn.cursor()
+# c.execute("DROP TABLE IF EXISTS book_request")
+# c.execute("DROP TABLE IF EXISTS issue_return")
+# conn.commit()
