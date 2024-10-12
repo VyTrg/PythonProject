@@ -4,9 +4,11 @@ from tkinter import messagebox
 
 from library_management import session
 
+
 from library_management import Login
 
 import reader
+import librarian
 
 
 class WelcomeWindow:
@@ -88,6 +90,20 @@ class WelcomeWindow:
                 messagebox.showinfo("Login Failed", "Username or Password is incorrect!")
         except ValueError as ve:
             messagebox.showinfo("Login Failed", str(ve))
+
+        username = session.query(Login).filter(self.user_entry.get()== Login.username).first()
+        password = session.query(Login).filter(self.password_entry.get() == Login.password).first()
+        if  username is not None and  password is not None:
+            if "reader" in username.username: # reader role
+                messagebox.showinfo("Login Successful", "You have successfully logged in, Reader!")
+                self.window.destroy()
+                reader.run(username)
+            elif "librarian" in username.username: #librarian role
+                messagebox.showinfo("Login Successful", "You have successfully logged in, Librarian!")
+                self.window.destroy()
+                librarian.run()
+        else:
+            messagebox.showinfo("Login Failed", "Please try again!")
 
 
 
