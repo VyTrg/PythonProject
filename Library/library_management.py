@@ -1,5 +1,5 @@
 from datetime import date
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Boolean, MetaData, Table
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Boolean, UniqueConstraint
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -13,22 +13,25 @@ class Login(Base):
     password = Column(String, nullable=False)
     status = Column(Boolean, default=True)  # operating:True or closed:False
     phone = Column(String)
+    name = Column(String)
 
-    def __init__(self, username, password, status, phone):
+    def __init__(self, username, password, status, phone, name):
         self.username = username
         self.password = password
         self.status = status
         self.phone = phone
+        self.name = name
 
 
 class Category(Base):
     __tablename__ = 'category'
     category_id = Column(Integer, primary_key=True, autoincrement=True)
     category_name = Column(String, nullable=False)
-
     def __init__(self, category_id, category_name):
         self.category_name = category_name
         self.category_id = category_id
+
+
 
 
 class Book(Base):
@@ -38,7 +41,7 @@ class Book(Base):
     title = Column(String, nullable=False)
     year = Column(Integer)
     quantity = Column(Integer, default=0)
-    image = Column(String)  # Image or String
+    image = Column(String, nullable=False)  # Image or String
 
     def __init__(self, book_id, isbn, title, year, quantity, image):
         self.book_id = book_id
@@ -49,6 +52,8 @@ class Book(Base):
         self.isbn = isbn
 
 
+
+
 class Author(Base):
     __tablename__ = 'book_author'
     author_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -56,7 +61,7 @@ class Author(Base):
     book_id = Column(Integer, ForeignKey('book.book_id'))  # foreignkey with book
 
     book = relationship("Book", back_populates="authors")
-
+    UniqueConstraint(book_id, author_id)
     def __init__(self, author_id, name, book_id):
         self.author_id = author_id
         self.name = name
@@ -74,7 +79,7 @@ class BookCategory(Base):
 
     book = relationship("Book", back_populates="categories")
     category = relationship("Category", back_populates="books")
-
+    UniqueConstraint(book_id, category_id)
     def __init__(self, book_id, category_id, book_category_id, category, book):
         self.book_id = book_id
         self.category_id = category_id
@@ -86,6 +91,8 @@ class BookCategory(Base):
 
 Book.categories = relationship("BookCategory", back_populates="book")
 Category.books = relationship("BookCategory", back_populates="category")
+
+
 
 
 class IssueReturnDetail(Base):
@@ -104,6 +111,8 @@ class IssueReturnDetail(Base):
         self.date_return = date_return
         self.status = status
         self.username = username
+
+
 
 
 # if __name__ == '__main__' :
