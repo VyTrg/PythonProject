@@ -9,11 +9,11 @@ Base = declarative_base()
 
 class Login(Base):
     __tablename__ = 'login'
-    username = Column(String, primary_key=True)
+    username = Column(String, primary_key=True, nullable=False)
     password = Column(String, nullable=False)
-    status = Column(Boolean, default=True)  # operating:True or closed:False
-    phone = Column(String)
-    name = Column(String)
+    status = Column(Boolean, default=True, nullable=False)  # operating:True or closed:False
+    phone = Column(String, nullable=False)
+    name = Column(String, nullable=False)
 
     def __init__(self, username, password, status, phone, name):
         self.username = username
@@ -39,7 +39,7 @@ class Book(Base):
     book_id = Column(Integer, primary_key=True, autoincrement=True)
     isbn = Column(String, nullable=False)
     title = Column(String, nullable=False)
-    year = Column(Integer)
+    year = Column(Integer, nullable=False)
     quantity = Column(Integer, default=0)
     image = Column(String, nullable=False)  # Image or String
 
@@ -74,8 +74,8 @@ Book.authors = relationship("Author", order_by=Author.author_id, back_populates=
 class BookCategory(Base):
     __tablename__ = 'book_category'
     book_category_id = Column(Integer, primary_key=True, autoincrement=True)
-    book_id = Column(Integer, ForeignKey('book.book_id'))
-    category_id = Column(Integer, ForeignKey('category.category_id'))
+    book_id = Column(Integer, ForeignKey('book.book_id'), nullable=False)
+    category_id = Column(Integer, ForeignKey('category.category_id'), nullable=False)
 
     book = relationship("Book", back_populates="categories")
     category = relationship("Category", back_populates="books")
@@ -97,12 +97,12 @@ Category.books = relationship("BookCategory", back_populates="category")
 
 class IssueReturnDetail(Base):
     __tablename__ = 'issue_return_detail'
-    issue_return_detail_id = Column(Integer, primary_key=True, autoincrement=True)
-    book_id = Column(Integer, ForeignKey('book.book_id'))
-    date_issue = Column(Date)
+    issue_return_detail_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    book_id = Column(Integer, ForeignKey('book.book_id'), nullable=False)
+    date_issue = Column(Date, nullable=False)
     date_return = Column(Date, nullable=True)
-    status = Column(String, default='Issued')
-    username = Column(String)
+    status = Column(String, default='Issued', nullable=False)
+    username = Column(String, nullable=False)
 
     def __init__(self, issue_return_detail_id, book_id, date_issue, date_return, status, username):
         self.issue_return_detail_id = issue_return_detail_id
