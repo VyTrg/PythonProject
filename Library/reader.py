@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
-
+from tkinter import ttk, Image, Canvas
 
 import account
 from Library.library_management import BookCategory, Category, Author
@@ -16,8 +15,31 @@ class ReaderWindow:
         self.window.resizable(False, False)
 
         self.user = user
-        books = session.query(IssueReturnDetail, Book).join(Book).filter(IssueReturnDetail.username == self.user.username).all()
-
+        issuereturn = session.query(IssueReturnDetail).filter(IssueReturnDetail.username == self.user.username).all()
+        self.books = []
+        for i in issuereturn:
+            b = session.query(Book).filter(Book.book_id == i.book_id).first()
+            book = {
+                'title' : b.title,
+                'isbn' : b.isbn,
+                'year' : b.year,
+                'issue_date': i.date_issue,
+                'return_date': i.date_return,
+                'status': i.status,
+                'image' : b.image
+            }
+            cate_book = session.query(BookCategory).filter(BookCategory.book_id == b.book_id).all()
+            cate = []
+            for j in cate_book:
+                k = session.query(Category).filter(Category.category_id == j.category_id).first()
+                cate.append(k.category_name)
+            book['category'] = ','.join(cate)
+            auth = []
+            authors = session.query(Author).filter(Author.author_id == i.book_id).all()
+            for j in authors:
+                auth.append(j.name)
+            book['author'] = ','.join(auth)
+            self.books.append(book)
 
         mainFrame = tk.Frame(self.window)
         mainFrame.pack()
@@ -27,42 +49,32 @@ class ReaderWindow:
 
         centerFrame = tk.Frame(mainFrame, width=1000, relief=tk.RIDGE, bg="#e0f0f0", height=530)
         centerFrame.pack(side=tk.TOP)
-
-
         #combobox filter
-        combobox_filter = ["All", "Issue", "Return"]
+        combobox_filter = ["All", "Issued", "Returned"]
         self.combobox = ttk.Combobox(centerFrame, values=combobox_filter)
         self.combobox.current(0)
         self.combobox.place(x= 140, y=50, width=80, height=20)
+
         #book table
-        column_name = ("Title", "ISBN", "Year", "Author", "Category", "Issue date", "Return date" ,"Status")
+        column_name = ("Title","Status")
         self.tree = ttk.Treeview(centerFrame, columns=column_name, show='headings')
         for column in column_name:
             self.tree.heading(column, text=column, command= lambda c=column: self.sort_treeview(self.tree, column, False))
             self.tree.column(column, width=100, anchor=tk.CENTER)
         data = []
-        for issue_return_detail, book in books:
+        for book in self.books:
             d = []
-            categories = session.query(BookCategory, Category).join(Category).filter(book.book_id == BookCategory.category_id).all()
-            cate = ""
-            for book_cate, category in categories:
-                cate = cate + category.category_name
-
-            authors = session.query(Author).filter(book.book_id == Author.author_id).all()
-            auth = ""
-
-            for author in authors:
-                auth = auth + author.name
-            d.extend([book.title, book.isbn, book.year, auth, cate, issue_return_detail.date_issue, issue_return_detail.date_return, issue_return_detail.status])
+            d.extend([book['title'], book['status']])
             data.append(d)
-            for item in data:
-                self.tree.insert('', 'end', values=item)
-        self.tree.place(x=10, y=80, width=980, height=400)
+        for item in data:
+            self.tree.insert('', 'end',values=item)
+        self.tree.place(x=10, y=80, width=300, height=400)
+        self.tree.bind('<Double-1>', self.clicker)
         # search book
         self.search_entry = tk.Entry(centerFrame)
         self.search_entry.place(x=10, y=50)
 
-        self.search_button = tk.Button(centerFrame, text="Search", command=self.search_book())
+        self.search_button = tk.Button(centerFrame, text="Search", command=self.search_book)
         self.search_button.place(x=230, y=50, height=20)
 
         #logout
@@ -86,6 +98,49 @@ class ReaderWindow:
                                           font="arial 12")
         self.buttonsearchbook.pack(side=tk.LEFT, padx=10)
 
+        #display whole book information
+        self.list_book = tk.Listbox(centerFrame, selectmode=tk.SINGLE)
+        self.list_book.place(x= 350, y= 80,  width=300, height=400)
+        #book image
+        self.book_image = tk.PhotoImage(file="", height=300, width=250)
+        self.label = tk.Label(centerFrame, image=self.book_image)
+        self.label.place(x=700, y=80)
+        #combobox filter
+        def option_selected(event):
+            select_option = self.combobox.get()
+            if select_option != "All":
+                items = self.tree.get_children()
+                for item in items:
+                    self.tree.delete(item)
+                    if self.tree.item(item)['values'][1] == select_option:
+                        filter_value = self.tree.item(item)['values']
+                        self.tree.insert("", 0, values=filter_value)
+
+            else:
+                items = self.tree.get_children()
+                for item in items:
+                    self.tree.insert("", 0, values=item)
+
+
+        self.combobox.bind('<<ComboboxSelected>>', option_selected)
+
+    def clicker(self, event):
+        selected = self.tree.selection()
+        item = self.tree.item(selected, "values")
+        for book in self.books:
+            if item[0] == book['title']:
+                self.list_book.delete(0, tk.END)
+                self.list_book.insert(tk.END, "Title :" + book['title'])
+                self.list_book.insert(tk.END, "ISBN :" + book['isbn'])
+                self.list_book.insert(tk.END, "Author :" + book['author'])
+                self.list_book.insert(tk.END, "Category :" + book['category'])
+                self.list_book.insert(tk.END, "Year :" + str(book['year']))
+                self.list_book.insert(tk.END, "Issue date :" + str(book['issue_date']))
+                self.list_book.insert(tk.END, "Return date :" + str(book['return_date']))
+                self.list_book.insert(tk.END, "Status :" + str(book['status']))
+                self.book_image.config(file="assets/image/thuvienimage.png")
+
+
     def logout(self):
         self.window.destroy()
         login.run()
@@ -93,13 +148,7 @@ class ReaderWindow:
     def account(self):
         self.account = account.AccountSetting(self.user)
 
-    # sort by column
-    def sort_treeview(self, col, descending):
-        data = [(self.tree.set(item, col), item) for item in self.tree.get_children('')]
-        data.sort(reverse=descending)
-        for index, (val, item) in enumerate(data):
-            self.tree.move(item, '', index)
-        self.tree.heading(col, command=lambda: self.sort_treeview(self.tree, col, not descending))
+
 
     # search book
     def search_book(self):
@@ -110,6 +159,15 @@ class ReaderWindow:
                 search_var = self.tree.item(item)['values']
                 self.tree.delete(item)
                 self.tree.insert("", 0, values=search_var)
+
+    # sort by column
+    def sort_treeview(self, tree, col, descending):
+        data = [(tree.set(item, col), item) for item in tree.get_children()]
+        data.sort(reverse=descending)
+        for index, (val, item) in enumerate(data):
+            tree.move(item, '', index)
+            tree.heading(col, command=lambda: self.sort_treeview(tree, col, not descending))
+
 
 
 def run(user):

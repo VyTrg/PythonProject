@@ -1,9 +1,8 @@
-
+from string import ascii_lowercase
 
 from Library.library_management import Login, Book, engine, Category, BookCategory, Author
 from library_management import session
 from faker import Faker
-import csv
 import requests
 
 from bs4 import BeautifulSoup
@@ -17,8 +16,9 @@ faker = Faker()
 
 
 def book_author_data():
+    print("Running book_author data generator")
     for i in range(1, 41):
-        book = session.query(Book).filter(Book.book_id == randint(1, session.query(Book).count() - 1)).first()
+        book = session.query(Book).filter(Book.book_id == randint(1, session.query(Book).count())).first()
         entry = {
             'author_id': i,
             'name': faker.name(),
@@ -29,11 +29,12 @@ def book_author_data():
         session.commit()
 
 def login_data():
+    print("Running login data generator")
     role = ["reader", "librarian"]
     for i in range(1, 41):
         entry = {
-            'username': random.choice(role) + randint(),
-            'password': faker.password(),
+            'username': random.choice(role) + str(i),
+            'password': faker.password(8, ascii_lowercase),
             'status': True,
             'phone': faker.phone_number(),
             'name': faker.name()
@@ -44,6 +45,7 @@ def login_data():
 
 
 def book_data():
+    print("Running book data generator")
     cnt = 1
     for i in range(1, 10):
         url = f"https://books.toscrape.com/catalogue/page-{i}.html"
@@ -77,6 +79,7 @@ def book_data():
 
 
 def category_data():
+    print("Running category data generator")
     url = f"https://books.toscrape.com/catalogue/page-1.html"
     response = requests.get(url)
     response = response.content
@@ -96,14 +99,26 @@ def category_data():
         cnt = cnt + 1
 
 def book_category_data():
-    pass
+    print("Running book category data generator")
+    for i in range(1, 41):
+        book = session.query(Book).filter(Book.book_id == randint(1, session.query(Book).count())).first()
+        category = session.query(Category).filter(Category.category_id == randint(1, session.query(Category).count())).first()
+        entry = {
+            'book_category_id': i,
+            'book_id': book.book_id,
+            'category_id': category.category_id
+        }
+        book_category = BookCategory(book_category_id=entry['book_category_id'] ,book_id=entry['book_id'], category_id=entry['category_id'])
+        session.add(book_category)
+        session.commit()
 
-def issue_return_detail_data():
-    pass
+
+
 
 if __name__ == "__main__":
     # book_data()
     # book_author_data()
     # login_data()
     # category_data()
+    # book_category_data()
     pass
