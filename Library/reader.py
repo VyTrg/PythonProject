@@ -1,11 +1,27 @@
 import tkinter as tk
-from tkinter import ttk, Image, Canvas
+from tkinter import ttk
+from tkinter.constants import HORIZONTAL, VERTICAL
 
 import account
-from Library.library_management import BookCategory, Category, Author
+from library_management import BookCategory, Category, Author
 from library_management import session, IssueReturnDetail, Book
 
 import login
+
+
+def wrap_text(text, width):
+    words = text.split()
+    lines = []
+    current_line = ""
+
+    for word in words:
+        if len(current_line + " " + word) <= width:
+            current_line += " " + word if current_line else word
+        else:
+            lines.append(current_line)
+            current_line = word
+    lines.append(current_line)
+    return lines
 
 class ReaderWindow:
     def __init__(self, window, user):
@@ -70,6 +86,10 @@ class ReaderWindow:
             self.tree.insert('', 'end',values=item)
         self.tree.place(x=10, y=80, width=300, height=400)
         self.tree.bind('<Double-1>', self.clicker)
+        self.scrollbar_tree = ttk.Scrollbar(self.tree, orient=VERTICAL)
+        self.scrollbar_tree.pack(side=tk.RIGHT, fill=tk.Y)
+        self.tree.configure(yscrollcommand=self.scrollbar_tree.set)
+        self.scrollbar_tree.config(command=self.tree.yview)
         # search book
         self.search_entry = tk.Entry(centerFrame)
         self.search_entry.place(x=10, y=50)
@@ -83,7 +103,7 @@ class ReaderWindow:
         self.buttonlogout.pack(side=tk.RIGHT, padx=10)
 
         # account button
-        self.iconaccount = tk.PhotoImage(file="assets/icons/user.png", height=50, width=50)
+        self.iconaccount = tk.PhotoImage(file="assets//icons//user.png", height=50, width=50)
         self.buttonaccount = tk.Button(topFrame, text="Account", image=self.iconaccount, compound=tk.LEFT,
                                        font="arial 12", command=self.account)
         self.buttonaccount.pack(side=tk.LEFT, padx=10)
@@ -93,7 +113,7 @@ class ReaderWindow:
         welcome_label.place(x=10, y=10)
 
         # search book
-        self.iconsearchbook = tk.PhotoImage(file="assets/icons/magnifying-glass.png", height=50, width=50)
+        self.iconsearchbook = tk.PhotoImage(file="assets//icons//magnifying-glass.png", height=50, width=50)
         self.buttonsearchbook = tk.Button(topFrame, text="Search book", image=self.iconsearchbook, compound=tk.LEFT,
                                           font="arial 12")
         self.buttonsearchbook.pack(side=tk.LEFT, padx=10)
@@ -101,9 +121,13 @@ class ReaderWindow:
         #display whole book information
         self.list_book = tk.Listbox(centerFrame, selectmode=tk.SINGLE)
         self.list_book.place(x= 350, y= 80,  width=300, height=400)
+        self.scrollbar_listboox = tk.Scrollbar(self.list_book, orient=HORIZONTAL)
+        self.scrollbar_listboox.pack(side=tk.BOTTOM, fill=tk.X)
+        self.list_book.config(xscrollcommand=self.scrollbar_listboox.set)
+        self.scrollbar_listboox.config(command=self.list_book.xview)
         #book image
         self.book_image = tk.PhotoImage(file="", height=300, width=250)
-        self.label = tk.Label(centerFrame, image=self.book_image)
+        self.label = tk.Label(centerFrame, image=self.book_image, bg="#e0f0f0")
         self.label.place(x=700, y=80)
         #combobox filter
         def option_selected(event):
@@ -138,8 +162,8 @@ class ReaderWindow:
                 self.list_book.insert(tk.END, "Issue date :" + str(book['issue_date']))
                 self.list_book.insert(tk.END, "Return date :" + str(book['return_date']))
                 self.list_book.insert(tk.END, "Status :" + str(book['status']))
-                self.book_image.config(file="assets/image/thuvienimage.png")
-
+                self.book_image.blank()
+                self.book_image.config(file="E:\\Year_3\\Semester_1_0_7\\python_project\\Library\\assets\\book_image\\" + book['image'])
 
     def logout(self):
         self.window.destroy()

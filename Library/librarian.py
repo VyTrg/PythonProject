@@ -125,9 +125,9 @@ class LibrianWindow:
         self.btn_giveBook.pack(side=tk.LEFT, padx=10)
 
     #book request
-        # self.book_request = tk.PhotoImage(file='../icons/book_request.png')
-        # self.btn_bookRequest = tk.Button(topFrame, text="Request Book", image=self.book_request, font='arial 12 bold', compound=tk.LEFT, command=self.request_book)
-        # self.btn_bookRequest.pack(side=tk.LEFT, padx=10)
+        self.book_request = tk.PhotoImage(file='../icons/book_request.png')
+        self.btn_bookRequest = tk.Button(topFrame, text="Request Book", image=self.book_request, font='arial 12 bold', compound=tk.LEFT, command=self.request_book)
+        self.btn_bookRequest.pack(side=tk.LEFT, padx=10)
 
 #Center Left Frame
         self.tabs = ttk.Notebook(centerLeftFrame, width=900, height=660)
@@ -210,13 +210,13 @@ class LibrianWindow:
     def give_book(self):
         give = give_book.GiveBook()
 
-    # def request_book(self):
-    #     num_request = cur.execute("select count(issue_return) from book_request where issue_return = FALSE").fetchone()
-    #     value = num_request[0]
-    #     if value == 0:
-    #         messagebox.showinfo("Notifications", "You have no book request")
-    #     else:
-    #         request = request_book.RequestBook()
+    def request_book(self):
+        num_request = cur.execute("select count(issue_return) from book_request where issue_return = FALSE").fetchone()
+        value = num_request[0]
+        if value == 0:
+            messagebox.showinfo("Notifications", "You have no book request")
+        else:
+            request = request_book.RequestBook()
 
 def run():
     window = tk.Tk()

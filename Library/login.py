@@ -2,10 +2,8 @@ import tkinter as tk
 from tkinter import PhotoImage
 from tkinter import messagebox
 
-from library_management import session
+from library_management import session, Login
 
-
-from library_management import Login
 
 import reader
 import librarian
@@ -30,12 +28,12 @@ class WelcomeWindow:
         right_frame.grid(row=0, column=1, sticky="nsew")
 
 
-        try:
-            self.dog_image = PhotoImage(file='assets/image/thuvienimage.png')
-            self.dog_image_label = tk.Label(left_frame, image=self.dog_image, bg="#00FFFF")
-            self.dog_image_label.pack(expand=True, fill=tk.BOTH)
-        except tk.TclError as e:
-            print(f"Error: {e}")
+        # try:
+        self.dog_image = PhotoImage(file=r'E:\Year_3\Semester_1_0_7\python_project\Library\assets\image\thuvienimage.png')
+        self.dog_image_label = tk.Label(left_frame, image=self.dog_image, bg="#00FFFF")
+        self.dog_image_label.pack(expand=True, fill=tk.BOTH)
+        # except tk.TclError as e:
+        #     print(f"Error: {e}")
 
 
         title_label = tk.Label(right_frame, text="QUẢN LÍ THƯ VIỆN ", font=('Comic Sans MS', 25, 'bold'),
@@ -74,7 +72,6 @@ class WelcomeWindow:
     def login(self):
 
         username = session.query(Login).filter(self.user_entry.get() == Login.username).first()
-
         try:
 
             if username is not None and username.password == self.password_entry.get():
