@@ -36,6 +36,9 @@ class WelcomeWindow:
         #     print(f"Error: {e}")
 
 
+
+
+
         title_label = tk.Label(right_frame, text="QUẢN LÍ THƯ VIỆN ", font=('Comic Sans MS', 25, 'bold'),
                                bg="#36454F", fg="#FFFFFF")
         title_label.grid(row=0, column=0, columnspan=2, pady=(20, 10), padx=30, sticky='ne')
@@ -54,6 +57,9 @@ class WelcomeWindow:
         self.password_entry = tk.Entry(right_frame, show="*")
         self.password_entry.grid(row=0, column=1, columnspan=2, pady=(210, 10), padx=90, sticky='ne')
 
+        self.passwordShow = tk.Button(right_frame, text='Show', command=self.show_pwd)
+        self.passwordShow.place(x=370, y=210)
+
         login_button = tk.Button(right_frame, text="👉 Log In", font=('Arial', 20, 'bold'), command=self.login,
                                  bg="#40E0D0", fg="white", padx=20, pady=5)
         login_button.grid(row=1, column=1, pady=10, padx=130, sticky='e')
@@ -67,6 +73,14 @@ class WelcomeWindow:
         right_frame.grid_rowconfigure(1, weight=1)
 
         self.dog_image_label.config(width=550, height=600)
+
+    def show_pwd(self):
+        if self.password_entry['show'] == '*':
+            self.password_entry['show'] = ''
+            self.password_entry['text'] = 'Hide'
+        else:
+            self.password_entry['show'] = '*'
+            self.password_entry['text'] = 'Show'
 
 
     def login(self):

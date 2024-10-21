@@ -130,20 +130,31 @@ class ReaderWindow:
         self.label = tk.Label(centerFrame, image=self.book_image, bg="#e0f0f0")
         self.label.place(x=700, y=80)
         #combobox filter
+
         def option_selected(event):
             select_option = self.combobox.get()
             if select_option != "All":
-                items = self.tree.get_children()
-                for item in items:
+                selects = []
+                for item in self.tree.get_children():
                     self.tree.delete(item)
-                    if self.tree.item(item)['values'][1] == select_option:
-                        filter_value = self.tree.item(item)['values']
-                        self.tree.insert("", 0, values=filter_value)
+                for book in self.books:
+                    if book['status'] == select_option:
+                         d = []
+                         d.extend([book['title'], book['status']])
+                         selects.append(d)
+                for item in selects:
+                    self.tree.insert('','end',values=item)
 
-            else:
-                items = self.tree.get_children()
-                for item in items:
-                    self.tree.insert("", 0, values=item)
+            elif select_option == "All":
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+                selects = []
+                for book in self.books:
+                    d = []
+                    d.extend([book['title'], book['status']])
+                    selects.append(d)
+                for item in selects:
+                    self.tree.insert('', 'end', values=item)
 
 
         self.combobox.bind('<<ComboboxSelected>>', option_selected)
@@ -172,17 +183,31 @@ class ReaderWindow:
     def account(self):
         self.account = account.AccountSetting(self.user)
 
-
-
     # search book
     def search_book(self):
         items = self.tree.get_children()
         search = self.search_entry.get().capitalize()
-        for item in items:
-            if search in (treeitem for treeitem in self.tree.item(item)['values'][0]):
-                search_var = self.tree.item(item)['values']
+        if search is None:
+            for item in self.tree.get_children():
                 self.tree.delete(item)
-                self.tree.insert("", 0, values=search_var)
+            selects = []
+            for book in self.books:
+                d = []
+                d.extend([book['title'], book['status']])
+                selects.append(d)
+            for item in selects:
+                self.tree.insert('', 'end', values=item)
+        else:
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+            selects = []
+            for book in self.books:
+                if search in book['title']:
+                    d = []
+                    d.extend([book['title'], book['status']])
+                    selects.append(d)
+            for item in selects:
+                self.tree.insert('', 'end', values=item)
 
     # sort by column
     def sort_treeview(self, tree, col, descending):
